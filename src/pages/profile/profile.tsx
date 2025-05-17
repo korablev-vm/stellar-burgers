@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '@app-store';
 import { getEmail, getName, updateUser } from '@slices';
 
 export const Profile: FC = () => {
-  /** TODO: взять переменную из стора */
   const dispatc = useAppDispatch();
   const userName = useAppSelector(getName);
   const userEmail = useAppSelector(getEmail);

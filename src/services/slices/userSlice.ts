@@ -2,11 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { setCookie, deleteCookie } from '@cookie';
 import {
-  fetchWithRefresh,
   registerUserApi,
   loginUserApi,
-  forgotPasswordApi,
-  resetPasswordApi,
   getUserApi,
   updateUserApi,
   logoutApi,
@@ -104,9 +101,9 @@ export const userSlice = createSlice({
   selectors: {
     getName: (state) => state.name,
     getEmail: (state) => state.email,
-    getChekuser: (state) => state.checkUser
+    getChekUser: (state) => state.checkUser
   }
 });
 
-export const { getName, getEmail, getChekuser } = userSlice.selectors;
+export const { getName, getEmail, getChekUser } = userSlice.selectors;
 export const { setUserCheck } = userSlice.actions;

@@ -29,7 +29,6 @@ export const ordersSlice = createSlice({
       .addCase(userOrdersThunk.fulfilled, (state, action) => {
         state.isLoad = false;
         state.userOrders = action.payload;
-        console.log(action);
       })
       .addCase(userOrdersThunk.rejected, (state, action) => {
         state.isLoad = false;
