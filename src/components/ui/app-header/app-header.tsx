@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './app-header.module.css';
 import { TAppHeaderUIProps } from './type';
@@ -32,9 +32,9 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => (
           <p className='text text_type_main-default ml-2'>Лента заказов</p>
         </NavLink>
       </div>
-      <div className={styles.logo}>
+      <NavLink to='/' className={styles.logo}>
         <Logo className='' />
-      </div>
+      </NavLink>
       <NavLink to='profile' className={styles.link_position_last}>
         <ProfileIcon type={'primary'} />
         <p className='text text_type_main-default ml-2'>
