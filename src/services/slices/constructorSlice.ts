@@ -9,11 +9,11 @@ import { TConstructorIngredient, TIngredient, TOrder } from '@utils-types';
 
 type IngredientsState = {
   constructor: {
-    bun: TConstructorIngredient | null; // Selected bun
-    ingredients: TConstructorIngredient[]; // Selected ingredients
+    bun: TConstructorIngredient | null;
+    ingredients: TConstructorIngredient[];
   };
-  buyBurgerStatus: boolean; // Status of the burger purchase
-  orderData: TOrder | null; // Order details
+  buyBurgerStatus: boolean;
+  orderData: TOrder | null;
 };
 
 const initialState: IngredientsState = {
@@ -25,7 +25,6 @@ const initialState: IngredientsState = {
   orderData: null
 };
 
-// Async thunk for ordering a burger
 export const BuyBurgerThunk = createAsyncThunk(
   'feeds/buyBurger',
   async (data: string[]) => await orderBurgerApi(data)
@@ -35,43 +34,41 @@ export const constructorSlice = createSlice({
   name: 'constructorIngredients',
   initialState,
   reducers: {
-    // Add an ingredient to the constructor
     addIngredient: {
       reducer: (state, action: PayloadAction<TConstructorIngredient>) => {
         if (action.payload.type === 'bun') {
-          state.constructor.bun = action.payload; // Replace the bun
+          state.constructor.bun = action.payload;
         } else {
-          state.constructor.ingredients.push(action.payload); // Add other ingredients
+          state.constructor.ingredients.push(action.payload);
         }
       },
       prepare: (ingredient: TIngredient) => {
-        const id = nanoid(); // Generate a unique ID for the ingredient
+        const id = nanoid();
         return { payload: { ...ingredient, id } };
       }
     },
-    // Remove an ingredient by ID
     removeIngredient: (state, action: PayloadAction<string>) => {
       state.constructor.ingredients = state.constructor.ingredients.filter(
         (ingredient) => ingredient.id !== action.payload
       );
     },
-    // Move an ingredient up in the list
     moveUp: (state, action: PayloadAction<number>) => {
       const index = action.payload;
+      if (index <= 0 || index >= state.constructor.ingredients.length) return;
       const temp = state.constructor.ingredients[index];
       state.constructor.ingredients[index] =
         state.constructor.ingredients[index - 1];
       state.constructor.ingredients[index - 1] = temp;
     },
-    // Move an ingredient down in the list
     moveDown: (state, action: PayloadAction<number>) => {
       const index = action.payload;
+      if (index < 0 || index >= state.constructor.ingredients.length - 1)
+        return;
       const temp = state.constructor.ingredients[index];
       state.constructor.ingredients[index] =
         state.constructor.ingredients[index + 1];
       state.constructor.ingredients[index + 1] = temp;
     },
-    // Clear the constructor
     clearConstructor: (state) => {
       state.orderData = null;
       state.constructor.bun = null;
@@ -81,21 +78,21 @@ export const constructorSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(BuyBurgerThunk.pending, (state) => {
-        state.buyBurgerStatus = true; // Set loading state
+        state.buyBurgerStatus = true;
       })
       .addCase(BuyBurgerThunk.fulfilled, (state, action) => {
-        state.buyBurgerStatus = false; // Reset loading state
-        state.orderData = action.payload.order; // Save order data
+        state.buyBurgerStatus = false;
+        state.orderData = action.payload.order;
       })
       .addCase(BuyBurgerThunk.rejected, (state, action) => {
-        state.buyBurgerStatus = false; // Reset loading state
-        console.error(state, action); // Log error
+        state.buyBurgerStatus = false;
+        console.error(state, action);
       });
   },
   selectors: {
-    getConstructorIngredients: (state) => state.constructor, // Get constructor data
-    getStatusBuyBurger: (state) => state.buyBurgerStatus, // Get purchase status
-    getOrderData: (state) => state.orderData // Get order details
+    getConstructorIngredients: (state) => state.constructor,
+    getStatusBuyBurger: (state) => state.buyBurgerStatus,
+    getOrderData: (state) => state.orderData
   }
 });
 
@@ -108,3 +105,4 @@ export const {
 } = constructorSlice.actions;
 export const { getConstructorIngredients, getStatusBuyBurger, getOrderData } =
   constructorSlice.selectors;
+export { initialState as initialStateConstructor };
