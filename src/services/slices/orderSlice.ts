@@ -1,19 +1,19 @@
-import { getOrdersApi, TOrdersResponse } from '@api';
+import { getOrdersApi } from '@api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TOrder } from '@utils-types';
 
-type TUesrOrders = {
+type TUserOrdersState = {
   isLoad: boolean;
   userOrders: TOrder[];
 };
 
-const initialState: TUesrOrders = {
+const initialState: TUserOrdersState = {
   isLoad: false,
   userOrders: []
 };
 
-export const userOrdersThunk = createAsyncThunk(
-  'orders/getuserOrders',
+export const userOrdersThunk = createAsyncThunk<TOrder[]>(
+  'orders/getUserOrders',
   async () => await getOrdersApi()
 );
 
@@ -32,13 +32,14 @@ export const ordersSlice = createSlice({
       })
       .addCase(userOrdersThunk.rejected, (state, action) => {
         state.isLoad = false;
-        console.error(state, action);
+        console.error('userOrdersThunk rejected:', action.error?.message);
       });
   },
   selectors: {
-    isload: (state) => state.isLoad,
+    isLoading: (state) => state.isLoad,
     getUserOrders: (state) => state.userOrders
   }
 });
 
-export const { isload, getUserOrders } = ordersSlice.selectors;
+export const { isLoading, getUserOrders } = ordersSlice.selectors;
+export { initialState as initialStateOrder };

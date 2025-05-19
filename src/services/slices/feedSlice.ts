@@ -3,18 +3,17 @@ import { TOrdersData } from '@utils-types';
 import { getFeedsApi } from '@api';
 
 type IngredientsState = {
-  feeds: TOrdersData; // Data for all orders
+  feeds: TOrdersData;
 };
 
 const initialState: IngredientsState = {
   feeds: {
-    orders: [], // List of orders
-    total: 0, // Total number of orders
-    totalToday: 0 // Total orders today
+    orders: [],
+    total: 0,
+    totalToday: 0
   }
 };
 
-// Async thunk to fetch all feeds
 export const FeedsThunk = createAsyncThunk(
   'feeds/getAll',
   async () => await getFeedsApi()
@@ -27,17 +26,20 @@ export const feedSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(FeedsThunk.fulfilled, (state, action) => {
-        state.feeds = action.payload; // Update feeds data
+        state.feeds = action.payload;
       })
-      .addCase(FeedsThunk.rejected, (state, action) => {
-        console.error(state, action); // Log error
+      .addCase(FeedsThunk.rejected, (_state, action) => {
+        if (action.error) {
+          console.error('FeedsThunk rejected:', action.error.message);
+        }
       });
   },
   selectors: {
-    getOrders: (state) => state.feeds.orders, // Get list of orders
-    getTotal: (state) => state.feeds.total, // Get total orders
-    getTotalToday: (state) => state.feeds.totalToday // Get today's orders
+    getOrders: (state) => state.feeds.orders,
+    getTotal: (state) => state.feeds.total,
+    getTotalToday: (state) => state.feeds.totalToday
   }
 });
 
 export const { getOrders, getTotal, getTotalToday } = feedSlice.selectors;
+export { initialState as initialStateFeeds };

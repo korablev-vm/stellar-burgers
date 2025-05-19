@@ -38,14 +38,16 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(IngredientsThunk.rejected, (state, action) => {
         state.loading = false;
-        console.error(state, action);
+        state.error = action.error.message || 'Unknown error';
+        console.error('IngredientsThunk rejected:', action.error?.message);
       });
   },
   selectors: {
     getIngredients: (state) => state.ingredients,
-    ingredientstIsLoading: (state) => state.loading
+    ingredientsIsLoading: (state) => state.loading
   }
 });
 
-export const { getIngredients, ingredientstIsLoading } =
+export const { getIngredients, ingredientsIsLoading } =
   ingredientsSlice.selectors;
+export { initialState as initialStateIngredients };
